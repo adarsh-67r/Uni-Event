@@ -2,12 +2,18 @@
 
 <div align="center">
 
-![UniEvent Logo](https://raw.githubusercontent.com/roshankumar0036singh/Uni-Event/main/app/assets/UniEvent.png)
+<img src="./app/assets/UniEvent.png" alt="UniEvent Logo" width="120" height="120" />
 
 **Enterprise-grade event management solution for educational institutions**
 
+[![GitHub stars](https://img.shields.io/github/stars/roshankumar0036singh/Uni-Event?style=social)](https://github.com/roshankumar0036singh/Uni-Event/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/roshankumar0036singh/Uni-Event?style=social)](https://github.com/roshankumar0036singh/Uni-Event/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/roshankumar0036singh/Uni-Event?style=social)](https://github.com/roshankumar0036singh/Uni-Event/watchers)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
+[![GitHub issues](https://img.shields.io/github/issues/roshankumar0036singh/Uni-Event)](https://github.com/roshankumar0036singh/Uni-Event/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/roshankumar0036singh/Uni-Event)](https://github.com/roshankumar0036singh/Uni-Event/pulls)
 [![Firebase](https://img.shields.io/badge/Firebase-FFCA28?logo=firebase&logoColor=black)](https://firebase.google.com/)
 [![React Native](https://img.shields.io/badge/React_Native-20232A?logo=react&logoColor=61DAFB)](https://reactnative.dev/)
 [![Expo](https://img.shields.io/badge/Expo-000020?logo=expo&logoColor=white)](https://expo.dev/)
