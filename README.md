@@ -1,9 +1,8 @@
 
+<img src="./app/assets/banner.png" alt="UniEvent Banner" width="1000" />
 <div align="center">
 
 <h1 align="center">Hey Coders! <img src="https://raw.githubusercontent.com/MartinHeinz/MartinHeinz/master/wave.gif" width="30px"></h1>
-
-<img src="./app/assets/banner.png" alt="UniEvent Banner" width="1000" />
 
 [![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=25&pause=1000&color=1E3A8A&center=true&vCenter=true&width=435&lines=Code.;Build.;Deploy.;Innovate.)](https://git.io/typing-svg)
 
