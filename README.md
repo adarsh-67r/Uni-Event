@@ -1,4 +1,3 @@
-# UniEvent - University Event Management Platform
 
 <div align="center">
 
