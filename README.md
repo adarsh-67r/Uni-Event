@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![UniEvent Banner](./app/assets/banner.png)
+<img src="./app/assets/banner.png" alt="UniEvent Banner" width="1280" height="640" />
 
 [![GitHub stars](https://img.shields.io/github/stars/roshankumar0036singh/Uni-Event?style=social)](https://github.com/roshankumar0036singh/Uni-Event/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/roshankumar0036singh/Uni-Event?style=social)](https://github.com/roshankumar0036singh/Uni-Event/network/members)
