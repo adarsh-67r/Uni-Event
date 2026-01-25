@@ -27,3 +27,4 @@ coverage/
 # Firebase Emulator Data
 emulator-data/
 .firebase/
+.firebaserc
