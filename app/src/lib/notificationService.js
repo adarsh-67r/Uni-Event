@@ -27,29 +27,29 @@ export async function registerForPushNotificationsAsync() {
   }
 
   if (Platform.OS === 'web') {
-      try {
-        const { messaging, VAPID_KEY } = require('./firebaseConfig');
-        const { getToken } = require('firebase/messaging');
-        
-        // Request permission specifically for Web
-        const permission = await Notification.requestPermission();
-        if (permission === 'granted') {
-            // Register SW explicitly
-            if ('serviceWorker' in navigator) {
-                const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-                token = await getToken(messaging, { 
-                    vapidKey: VAPID_KEY,
-                    serviceWorkerRegistration: registration
-                });
-                console.log("Web Push Token:", token);
-            }
-        } else {
-            console.log("Web Notification permission denied");
+    try {
+      const { messaging, VAPID_KEY } = require('./firebaseConfig');
+      const { getToken } = require('firebase/messaging');
+
+      // Request permission specifically for Web
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        // Register SW explicitly
+        if ('serviceWorker' in navigator) {
+          const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+          token = await getToken(messaging, {
+            vapidKey: VAPID_KEY,
+            serviceWorkerRegistration: registration,
+          });
+          console.log('Web Push Token:', token);
         }
-      } catch (e) {
-          console.error("Error getting web push token:", e);
+      } else {
+        console.log('Web Notification permission denied');
       }
-      return token;
+    } catch (e) {
+      console.error('Error getting web push token:', e);
+    }
+    return token;
   }
 
   if (Device.isDevice) {
@@ -67,14 +67,18 @@ export async function registerForPushNotificationsAsync() {
     // Get the token using the project ID from app config
     const projectId = Constants.expoConfig?.extra?.eas?.projectId;
     if (!projectId) {
-      console.log("No EAS Project ID found. Push notifications will not work, but local reminders will.");
+      console.log(
+        'No EAS Project ID found. Push notifications will not work, but local reminders will.',
+      );
     } else {
       try {
-        token = (await Notifications.getExpoPushTokenAsync({
-          projectId: projectId,
-        })).data;
+        token = (
+          await Notifications.getExpoPushTokenAsync({
+            projectId: projectId,
+          })
+        ).data;
       } catch (e) {
-        console.error("Error getting push token:", e);
+        console.error('Error getting push token:', e);
       }
     }
   } else {
@@ -99,8 +103,8 @@ export async function scheduleEventReminder(event) {
     if (eventDate > now) {
       // Event is soon, trigger soon (e.g., 5 seconds from now)
       if (Platform.OS === 'web') {
-        console.log("Simulating immediate notification on web");
-        return "web-mock-id-immediate-" + event.id;
+        console.log('Simulating immediate notification on web');
+        return 'web-mock-id-immediate-' + event.id;
       }
       return await Notifications.scheduleNotificationAsync({
         content: {
@@ -114,22 +118,21 @@ export async function scheduleEventReminder(event) {
     return null; // Already passed
   }
 
-
   if (isNaN(triggerDate.getTime())) {
-    console.error("Invalid event date:", event.startAt);
+    console.error('Invalid event date:', event.startAt);
     return null;
   }
 
   console.log(`Scheduling for: ${triggerDate.toLocaleString()} (Now: ${now.toLocaleString()})`);
 
   if (Platform.OS === 'web') {
-    console.log("Local notifications scheduled (simulated on web):", {
+    console.log('Local notifications scheduled (simulated on web):', {
       title: `App Reminder: ${event.title}`,
-      trigger: triggerDate
+      trigger: triggerDate,
     });
-    // For web, we could return a mock ID or use Notification API directly, 
+    // For web, we could return a mock ID or use Notification API directly,
     // but preventing crash is priority.
-    return "web-mock-id-" + event.id;
+    return 'web-mock-id-' + event.id;
   }
 
   const id = await Notifications.scheduleNotificationAsync({
@@ -142,7 +145,7 @@ export async function scheduleEventReminder(event) {
     trigger: { date: triggerDate },
   });
 
-  console.log("Scheduled notification ID:", id);
+  console.log('Scheduled notification ID:', id);
   return id;
 }
 
@@ -150,8 +153,8 @@ export async function scheduleEventReminder(event) {
 export async function testNotification() {
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: "Test Notification",
-      body: "This is a test notification to verify permissions.",
+      title: 'Test Notification',
+      body: 'This is a test notification to verify permissions.',
     },
     trigger: null, // immediate
   });
@@ -160,19 +163,19 @@ export async function testNotification() {
 // Clear all pending notifications
 export async function cancelAllNotifications() {
   if (Platform.OS === 'web') {
-    console.log("Cancelled all notifications (simulated on web)");
+    console.log('Cancelled all notifications (simulated on web)');
     return;
   }
   await Notifications.cancelAllScheduledNotificationsAsync();
-  console.log("All scheduled notifications cancelled");
+  console.log('All scheduled notifications cancelled');
 }
 
 export async function cancelScheduledNotification(id) {
   if (!id) return;
   if (Platform.OS === 'web') {
-    console.log("Cancelled notification (simulated on web):", id);
+    console.log('Cancelled notification (simulated on web):', id);
     return;
   }
   await Notifications.cancelScheduledNotificationAsync(id);
-  console.log("Cancelled notification:", id);
+  console.log('Cancelled notification:', id);
 }

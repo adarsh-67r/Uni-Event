@@ -6,9 +6,9 @@ try {
   const content = fs.readFileSync(p, 'utf8');
   const lines = content.split('\n');
   lines.forEach((line, index) => {
-      if (line.includes('node:sea') || line.includes('mkdir')) {
-          console.log(`${index + 1}: ${line.trim()}`);
-      }
+    if (line.includes('node:sea') || line.includes('mkdir')) {
+      console.log(`${index + 1}: ${line.trim()}`);
+    }
   });
 } catch (e) {
   console.error(e);

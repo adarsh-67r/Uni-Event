@@ -6,8 +6,6 @@ const config = getDefaultConfig(__dirname);
 
 config.resolver.sourceExts.push('mjs');
 
-
-
 config.resolver.extraNodeModules = {
   ...config.resolver.extraNodeModules,
   'generator-function': require.resolve('generator-function'),

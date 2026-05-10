@@ -13,12 +13,12 @@ try {
 
   // Simple and safe: just replace the string literal 'node:sea' with something harmless
   let changed = false;
-  
+
   if (content.includes("'node:sea'")) {
     content = content.replace(/'node:sea'/g, "'_node_sea_disabled'");
     changed = true;
   }
-  
+
   if (content.includes('"node:sea"')) {
     content = content.replace(/"node:sea"/g, '"_node_sea_disabled"');
     changed = true;

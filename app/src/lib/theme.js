@@ -1,16 +1,16 @@
 export const palette = {
   // Brand Colors - From User Image (Orange/Yellow accents)
-  primary: '#FFB74D',      // Softer Orange (Less Vibrant)
+  primary: '#FFB74D', // Softer Orange (Less Vibrant)
   primaryVariant: '#F57C00', // Darker Orange
-  secondary: '#FFD600',    // Bright Yellow (Price tags/Badges)
-  
+  secondary: '#FFD600', // Bright Yellow (Price tags/Badges)
+
   // Neutral - Light
   backgroundLight: '#F4F6F8',
   surfaceLight: '#FFFFFF',
   textLight: '#121212',
   textSecondaryLight: '#555555',
   borderLight: '#E0E0E0',
-  
+
   // Neutral - Dark
   backgroundDark: '#121212',
   surfaceDark: '#1E1E1E',
@@ -20,7 +20,7 @@ export const palette = {
 
   // Semantic
   success: '#00C853',
-  error: '#FF3D00', 
+  error: '#FF3D00',
   warning: '#FFAB00',
   info: '#2979FF',
 };
@@ -53,42 +53,42 @@ const typography = {
   caption: {
     fontSize: 12,
     fontWeight: '500',
-  }
+  },
 };
 
 const shadows = {
   light: {
     default: {
-      shadowColor: "#000",
+      shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.1,
       shadowRadius: 4,
       elevation: 3,
     },
     small: {
-      shadowColor: "#000",
+      shadowColor: '#000',
       shadowOffset: { width: 0, height: 1 },
       shadowOpacity: 0.05,
       shadowRadius: 2,
       elevation: 1,
-    }
+    },
   },
   dark: {
     default: {
-      shadowColor: "#000",
+      shadowColor: '#000',
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.3,
       shadowRadius: 8,
       elevation: 6,
     },
     small: {
-      shadowColor: "#000",
+      shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.2,
       shadowRadius: 4,
       elevation: 2,
-    }
-  }
+    },
+  },
 };
 
 export const lightTheme = {
@@ -136,4 +136,4 @@ export const darkTheme = {
 };
 
 // Default export
-export const theme = lightTheme; 
+export const theme = lightTheme;

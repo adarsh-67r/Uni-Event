@@ -1,6 +1,16 @@
 const fs = require('fs');
 const path = require('path');
-const file = path.join('node_modules', '@expo', 'cli', 'build', 'src', 'start', 'server', 'metro', 'externals.js');
+const file = path.join(
+  'node_modules',
+  '@expo',
+  'cli',
+  'build',
+  'src',
+  'start',
+  'server',
+  'metro',
+  'externals.js',
+);
 
 try {
   const content = fs.readFileSync(file, 'utf8');

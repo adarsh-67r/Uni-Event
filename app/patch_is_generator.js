@@ -7,10 +7,11 @@ try {
   let isGenContent = fs.readFileSync(isGenPath, 'utf8');
   console.log('Original is-generator-function content read.');
 
-  // We want to replace `var generatorFunction = require('generator-function');` 
+  // We want to replace `var generatorFunction = require('generator-function');`
   // with the inlined logic.
 
-  const replacement = "var generatorFunction = (function(){ try { return Function('return function*() {}')().constructor; } catch(e) { return function(){}; } })();";
+  const replacement =
+    "var generatorFunction = (function(){ try { return Function('return function*() {}')().constructor; } catch(e) { return function(){}; } })();";
 
   let newContent = isGenContent;
 
@@ -32,7 +33,6 @@ try {
     // print content snippet for debugging if it fails
     console.log('Snippet:', isGenContent.substring(0, 100));
   }
-
 } catch (e) {
   console.error('Error patching:', e);
 }

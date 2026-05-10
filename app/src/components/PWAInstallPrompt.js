@@ -11,7 +11,7 @@ export default function PWAInstallPrompt() {
   useEffect(() => {
     if (Platform.OS !== 'web') return;
 
-    const handler = (e) => {
+    const handler = e => {
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault();
       // Stash the event so it can be triggered later.
@@ -35,13 +35,13 @@ export default function PWAInstallPrompt() {
 
     // Wait for the user to respond to the prompt
     const { outcome } = await deferredPrompt.userChoice;
-    
+
     if (outcome === 'accepted') {
       console.log('User accepted the install prompt');
     } else {
       console.log('User dismissed the install prompt');
     }
-    
+
     setDeferredPrompt(null);
     setIsVisible(false);
   };
@@ -49,26 +49,33 @@ export default function PWAInstallPrompt() {
   if (!isVisible) return null;
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.surface, borderColor: theme.colors.primary }]}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: theme.colors.surface, borderColor: theme.colors.primary },
+      ]}
+    >
       <View style={styles.content}>
         <View style={[styles.iconBox, { backgroundColor: theme.colors.primary }]}>
-             <Ionicons name="download" size={24} color="#fff" />
+          <Ionicons name="download" size={24} color="#fff" />
         </View>
-        <View style={{flex: 1}}>
-            <Text style={[styles.title, { color: theme.colors.text }]}>Install App</Text>
-            <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>Add to Home Screen for better experience</Text>
+        <View style={{ flex: 1 }}>
+          <Text style={[styles.title, { color: theme.colors.text }]}>Install App</Text>
+          <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
+            Add to Home Screen for better experience
+          </Text>
         </View>
       </View>
       <View style={styles.actions}>
-          <TouchableOpacity onPress={() => setIsVisible(false)} style={styles.btnSecondary}>
-              <Text style={{color: theme.colors.textSecondary}}>Not Now</Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            onPress={handleInstall} 
-            style={[styles.btnPrimary, { backgroundColor: theme.colors.primary }]}
-          >
-              <Text style={{color: '#fff', fontWeight: 'bold'}}>Install</Text>
-          </TouchableOpacity>
+        <TouchableOpacity onPress={() => setIsVisible(false)} style={styles.btnSecondary}>
+          <Text style={{ color: theme.colors.textSecondary }}>Not Now</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={handleInstall}
+          style={[styles.btnPrimary, { backgroundColor: theme.colors.primary }]}
+        >
+          <Text style={{ color: '#fff', fontWeight: 'bold' }}>Install</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -83,48 +90,48 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 15,
     borderWidth: 1,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 4.65,
     elevation: 8,
     maxWidth: 500, // Don't stretch too wide on desktop
     alignSelf: 'center', // Center on desktop
-    zIndex: 1000
+    zIndex: 1000,
   },
   content: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 15,
-    gap: 15
+    gap: 15,
   },
   iconBox: {
-      width: 50,
-      height: 50,
-      borderRadius: 12,
-      justifyContent: 'center',
-      alignItems: 'center'
+    width: 50,
+    height: 50,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
-      fontSize: 16,
-      fontWeight: 'bold'
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   subtitle: {
-      fontSize: 13,
+    fontSize: 13,
   },
   actions: {
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-      gap: 15,
-      alignItems: 'center'
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 15,
+    alignItems: 'center',
   },
   btnPrimary: {
-      paddingVertical: 8,
-      paddingHorizontal: 16,
-      borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
   },
   btnSecondary: {
-      paddingVertical: 8,
-      paddingHorizontal: 8,
-  }
+    paddingVertical: 8,
+    paddingHorizontal: 8,
+  },
 });

@@ -6,7 +6,21 @@ import * as WebBrowser from 'expo-web-browser';
 import { GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Dimensions, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Dimensions,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import { useAuth } from '../lib/AuthContext';
 import { useTheme } from '../lib/ThemeContext';
 import { auth, db } from '../lib/firebaseConfig';
@@ -29,20 +43,21 @@ export default function AuthScreen() {
     androidClientId: process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID,
     iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
     webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
-    redirectUri: Platform.OS === 'web'
-      ? (window.location.origin || process.env.EXPO_PUBLIC_REDIRECT_URI)
-      : (process.env.EXPO_PUBLIC_REDIRECT_URI || makeRedirectUri({ useProxy: true })),
+    redirectUri:
+      Platform.OS === 'web'
+        ? window.location.origin || process.env.EXPO_PUBLIC_REDIRECT_URI
+        : process.env.EXPO_PUBLIC_REDIRECT_URI || makeRedirectUri({ useProxy: true }),
   });
 
   useEffect(() => {
     if (response?.type === 'error') {
-      Alert.alert('Auth Error', JSON.stringify(response.error || "Unknown Error", null, 2));
+      Alert.alert('Auth Error', JSON.stringify(response.error || 'Unknown Error', null, 2));
     } else if (response?.type === 'success') {
       const { id_token } = response.params;
       const { accessToken } = response.authentication || {};
 
       if (!id_token && !accessToken) {
-        Alert.alert("Auth Error", "No tokens returned from Google");
+        Alert.alert('Auth Error', 'No tokens returned from Google');
         return;
       }
 
@@ -52,21 +67,21 @@ export default function AuthScreen() {
       if (process.env.EXPO_PUBLIC_USE_EMULATORS === 'true') {
         // 1. Fetch real Google Profile using the valid Access Token
         fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-          headers: { Authorization: `Bearer ${accessToken}` }
+          headers: { Authorization: `Bearer ${accessToken}` },
         })
           .then(res => res.json())
-          .then(async (googleUser) => {
+          .then(async googleUser => {
             // 2. "Sign In" to Emulator using this email
             // We use a dummy password because we trust the Google Token verification step above
             try {
-              await signIn(googleUser.email, "google-emulator-pass");
+              await signIn(googleUser.email, 'google-emulator-pass');
             } catch (e) {
               // If user doesn't exist in Emulator, create them
               if (e.code === 'auth/user-not-found' || e.code === 'auth/invalid-credential') {
-                await signUp(googleUser.email, "google-emulator-pass", {
+                await signUp(googleUser.email, 'google-emulator-pass', {
                   displayName: googleUser.name,
                   photoURL: googleUser.picture,
-                  provider: 'google' // Mark as google provider
+                  provider: 'google', // Mark as google provider
                 });
               } else {
                 throw e;
@@ -74,7 +89,7 @@ export default function AuthScreen() {
             }
           })
           .catch(err => {
-            Alert.alert("Emulator Auth Error", err.message);
+            Alert.alert('Emulator Auth Error', err.message);
           })
           .finally(() => setLoading(false));
 
@@ -84,7 +99,7 @@ export default function AuthScreen() {
       // --- PRODUCTION FLOW ---
       const credential = GoogleAuthProvider.credential(id_token || null, accessToken || null);
       signInWithCredential(auth, credential)
-        .then(async (userCredential) => {
+        .then(async userCredential => {
           const user = userCredential.user;
           saveGoogleAccountCredentials(user);
 
@@ -98,12 +113,12 @@ export default function AuthScreen() {
               role: 'student',
               createdAt: new Date().toISOString(),
               photoURL: user.photoURL,
-              provider: 'google'
+              provider: 'google',
             });
           }
         })
-        .catch((error) => {
-          Alert.alert("Google Sign-In Error", error.message);
+        .catch(error => {
+          Alert.alert('Google Sign-In Error', error.message);
         })
         .finally(() => setLoading(false));
     }
@@ -148,22 +163,41 @@ export default function AuthScreen() {
         >
           <View style={styles.header}>
             <View style={[styles.iconContainer, { backgroundColor: theme.colors.surface }]}>
-              <Ionicons name={isLogin ? "log-in" : "person-add"} size={32} color={theme.colors.primary} />
+              <Ionicons
+                name={isLogin ? 'log-in' : 'person-add'}
+                size={32}
+                color={theme.colors.primary}
+              />
             </View>
             <Text style={[styles.title, { color: theme.colors.text }]}>
               {isLogin ? 'Welcome Back!' : 'Join Us'}
             </Text>
             <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
-              {isLogin ? 'Sign in to continue exploring events' : 'Create an account to get started'}
+              {isLogin
+                ? 'Sign in to continue exploring events'
+                : 'Create an account to get started'}
             </Text>
           </View>
 
           <View style={styles.form}>
             {!isLogin && (
-              <View style={[styles.inputContainer, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
-                <Ionicons name="person-outline" size={20} color={theme.colors.textSecondary} style={styles.inputIcon} />
+              <View
+                style={[
+                  styles.inputContainer,
+                  { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+                ]}
+              >
+                <Ionicons
+                  name="person-outline"
+                  size={20}
+                  color={theme.colors.textSecondary}
+                  style={styles.inputIcon}
+                />
                 <TextInput
-                  style={[styles.input, { color: theme.colors.text, backgroundColor: 'transparent' }]}
+                  style={[
+                    styles.input,
+                    { color: theme.colors.text, backgroundColor: 'transparent' },
+                  ]}
                   placeholder="Full Name"
                   placeholderTextColor={theme.colors.textSecondary}
                   value={name}
@@ -172,8 +206,18 @@ export default function AuthScreen() {
               </View>
             )}
 
-            <View style={[styles.inputContainer, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
-              <Ionicons name="mail-outline" size={20} color={theme.colors.textSecondary} style={styles.inputIcon} />
+            <View
+              style={[
+                styles.inputContainer,
+                { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+              ]}
+            >
+              <Ionicons
+                name="mail-outline"
+                size={20}
+                color={theme.colors.textSecondary}
+                style={styles.inputIcon}
+              />
               <TextInput
                 style={[styles.input, { color: theme.colors.text, backgroundColor: 'transparent' }]}
                 placeholder="Email Address"
@@ -185,8 +229,18 @@ export default function AuthScreen() {
               />
             </View>
 
-            <View style={[styles.inputContainer, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
-              <Ionicons name="lock-closed-outline" size={20} color={theme.colors.textSecondary} style={styles.inputIcon} />
+            <View
+              style={[
+                styles.inputContainer,
+                { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+              ]}
+            >
+              <Ionicons
+                name="lock-closed-outline"
+                size={20}
+                color={theme.colors.textSecondary}
+                style={styles.inputIcon}
+              />
               <TextInput
                 style={[styles.input, { color: theme.colors.text, backgroundColor: 'transparent' }]}
                 placeholder="Password"
@@ -217,17 +271,22 @@ export default function AuthScreen() {
           </View>
 
           <TouchableOpacity
-            style={[styles.googleButton, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}
+            style={[
+              styles.googleButton,
+              { backgroundColor: theme.colors.surface, borderColor: theme.colors.border },
+            ]}
             onPress={() => promptAsync()}
             disabled={!request || loading}
           >
             <Ionicons name="logo-google" size={20} color={theme.colors.text} />
-            <Text style={[styles.googleButtonText, { color: theme.colors.text }]}>Continue with Google</Text>
+            <Text style={[styles.googleButtonText, { color: theme.colors.text }]}>
+              Continue with Google
+            </Text>
           </TouchableOpacity>
 
           <View style={styles.footer}>
             <Text style={[styles.footerText, { color: theme.colors.textSecondary }]}>
-              {isLogin ? "Don't have an account?" : "Already have an account?"}
+              {isLogin ? "Don't have an account?" : 'Already have an account?'}
             </Text>
             <TouchableOpacity onPress={() => setIsLogin(!isLogin)}>
               <Text style={[styles.footerLink, { color: theme.colors.primary }]}>
@@ -260,7 +319,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     elevation: 4,
@@ -302,7 +361,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 10,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     elevation: 4,

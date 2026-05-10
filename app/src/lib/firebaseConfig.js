@@ -1,6 +1,11 @@
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from 'firebase/app';
-import { browserLocalPersistence, getReactNativePersistence, initializeAuth, connectAuthEmulator } from 'firebase/auth';
+import {
+  browserLocalPersistence,
+  getReactNativePersistence,
+  initializeAuth,
+  connectAuthEmulator,
+} from 'firebase/auth';
 import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
 import { getFunctions, connectFunctionsEmulator } from 'firebase/functions';
 import { getStorage, connectStorageEmulator } from 'firebase/storage';
@@ -17,8 +22,8 @@ const firebaseConfig = {
 
 // Validate Config
 if (!firebaseConfig.apiKey) {
-  console.error("Firebase Configuration Error: API Key is missing.");
-  console.error("Please ensure you have a .env file with EXPO_PUBLIC_FIREBASE_API_KEY defined.");
+  console.error('Firebase Configuration Error: API Key is missing.');
+  console.error('Please ensure you have a .env file with EXPO_PUBLIC_FIREBASE_API_KEY defined.');
 }
 
 // Initialize App
@@ -28,11 +33,11 @@ const app = initializeApp(firebaseConfig);
 let auth;
 if (Platform.OS === 'web') {
   auth = initializeAuth(app, {
-    persistence: browserLocalPersistence
+    persistence: browserLocalPersistence,
   });
 } else {
   auth = initializeAuth(app, {
-    persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+    persistence: getReactNativePersistence(ReactNativeAsyncStorage),
   });
 }
 
@@ -49,10 +54,7 @@ export const messaging = getMessaging(app);
 // Connect to Emulators if configured
 if (process.env.EXPO_PUBLIC_USE_EMULATORS === 'true') {
   const { LogBox } = require('react-native');
-  LogBox.ignoreLogs([
-    /Running in emulator mode/,
-    /emulator/i
-  ]);
+  LogBox.ignoreLogs([/Running in emulator mode/, /emulator/i]);
 
   console.log('Using Firebase Emulators...');
   const EMULATOR_HOST = Platform.OS === 'android' ? '10.0.2.2' : 'localhost';

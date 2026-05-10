@@ -39,22 +39,22 @@ export default function DesktopAdmin() {
 
       // 2. Call Backend to Set Role
       if (user && ownerId) {
-          const token = await user.getIdToken();
-          const response = await fetch(`${API_URL}/api/setRole`, {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${token}`
-              },
-              body: JSON.stringify({ uid: ownerId, role: 'club' })
-          });
+        const token = await user.getIdToken();
+        const response = await fetch(`${API_URL}/api/setRole`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ uid: ownerId, role: 'club' }),
+        });
 
-          if (!response.ok) {
-              const err = await response.text();
-              console.error("Backend Error:", err);
-              Alert.alert('Warning', 'Club approved but Role update failed: ' + err);
-              return;
-          }
+        if (!response.ok) {
+          const err = await response.text();
+          console.error('Backend Error:', err);
+          Alert.alert('Warning', 'Club approved but Role update failed: ' + err);
+          return;
+        }
       }
 
       fetchClubs();
@@ -70,21 +70,32 @@ export default function DesktopAdmin() {
       {/* Sidebar */}
       <View style={styles.sidebar}>
         <Text style={styles.sidebarTitle}>Admin Panel</Text>
-        <TouchableOpacity style={[styles.navItem, activeTab === 'clubs' && styles.navActive]} onPress={() => setActiveTab('clubs')}>
+        <TouchableOpacity
+          style={[styles.navItem, activeTab === 'clubs' && styles.navActive]}
+          onPress={() => setActiveTab('clubs')}
+        >
           <Text style={styles.navText}>Clubs</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.navItem, activeTab === 'events' && styles.navActive]} onPress={() => setActiveTab('events')}>
+        <TouchableOpacity
+          style={[styles.navItem, activeTab === 'events' && styles.navActive]}
+          onPress={() => setActiveTab('events')}
+        >
           <Text style={styles.navText}>Events</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.navItem, activeTab === 'analytics' && styles.navActive]} onPress={() => setActiveTab('analytics')}>
+        <TouchableOpacity
+          style={[styles.navItem, activeTab === 'analytics' && styles.navActive]}
+          onPress={() => setActiveTab('analytics')}
+        >
           <Text style={styles.navText}>Analytics</Text>
         </TouchableOpacity>
       </View>
 
       {/* Main Content */}
       <View style={styles.main}>
-        <Text style={styles.header}>{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Management</Text>
-        
+        <Text style={styles.header}>
+          {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Management
+        </Text>
+
         <ScrollView style={styles.contentArea}>
           {activeTab === 'clubs' && (
             <View style={styles.table}>
@@ -101,7 +112,10 @@ export default function DesktopAdmin() {
                   <Text style={styles.cell}>{club.approved ? 'Approved' : 'Pending'}</Text>
                   <View style={styles.cell}>
                     {!club.approved && (
-                      <TouchableOpacity style={styles.approveBtn} onPress={() => approveClub(club.id, club.ownerUserId)}>
+                      <TouchableOpacity
+                        style={styles.approveBtn}
+                        onPress={() => approveClub(club.id, club.ownerUserId)}
+                      >
                         <Text style={styles.approveText}>Approve</Text>
                       </TouchableOpacity>
                     )}
@@ -112,24 +126,26 @@ export default function DesktopAdmin() {
           )}
 
           {activeTab === 'events' && (
-             <View style={styles.table}>
-               <View style={[styles.row, styles.headerRow]}>
-                 <Text style={styles.cell}>Title</Text>
-                 <Text style={styles.cell}>Date</Text>
-                 <Text style={styles.cell}>Category</Text>
-               </View>
-               {events.map(event => (
-                 <View key={event.id} style={styles.row}>
-                   <Text style={styles.cell}>{event.title}</Text>
-                   <Text style={styles.cell}>{new Date(event.startAt).toLocaleDateString()}</Text>
-                   <Text style={styles.cell}>{event.category}</Text>
-                 </View>
-               ))}
-             </View>
+            <View style={styles.table}>
+              <View style={[styles.row, styles.headerRow]}>
+                <Text style={styles.cell}>Title</Text>
+                <Text style={styles.cell}>Date</Text>
+                <Text style={styles.cell}>Category</Text>
+              </View>
+              {events.map(event => (
+                <View key={event.id} style={styles.row}>
+                  <Text style={styles.cell}>{event.title}</Text>
+                  <Text style={styles.cell}>{new Date(event.startAt).toLocaleDateString()}</Text>
+                  <Text style={styles.cell}>{event.category}</Text>
+                </View>
+              ))}
+            </View>
           )}
 
           {activeTab === 'analytics' && (
-            <View><Text>Analytics Placeholder</Text></View>
+            <View>
+              <Text>Analytics Placeholder</Text>
+            </View>
           )}
         </ScrollView>
       </View>

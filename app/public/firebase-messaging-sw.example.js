@@ -19,7 +19,7 @@ messaging.onBackgroundMessage(function (payload) {
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
-    icon: '/assets/UniEvent.png'
+    icon: '/assets/UniEvent.png',
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);

@@ -18,11 +18,11 @@ export default function NotificationBell() {
     if (!user) return;
 
     const q = query(
-        collection(db, 'users', user.uid, 'notifications'), 
-        orderBy('createdAt', 'desc')
+      collection(db, 'users', user.uid, 'notifications'),
+      orderBy('createdAt', 'desc'),
     );
-    
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+
+    const unsubscribe = onSnapshot(q, snapshot => {
       const list = [];
       let unread = 0;
       snapshot.forEach(doc => {
@@ -37,17 +37,17 @@ export default function NotificationBell() {
     return unsubscribe;
   }, [user]);
 
-  const handleNotificationPress = async (item) => {
-      // Mark as read
-      if (!item.read) {
-          try {
-              const ref = doc(db, 'users', user.uid, 'notifications', item.id);
-              await updateDoc(ref, { read: true });
-          } catch (e) {
-              console.error("Error marking read:", e);
-          }
+  const handleNotificationPress = async item => {
+    // Mark as read
+    if (!item.read) {
+      try {
+        const ref = doc(db, 'users', user.uid, 'notifications', item.id);
+        await updateDoc(ref, { read: true });
+      } catch (e) {
+        console.error('Error marking read:', e);
       }
-      // Future: Navigate to event if eventId exists
+    }
+    // Future: Navigate to event if eventId exists
   };
 
   return (
@@ -63,126 +63,130 @@ export default function NotificationBell() {
 
       <Modal visible={showModal} animationType="slide" transparent>
         <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
-                <View style={styles.modalHeader}>
-                    <Text style={styles.modalTitle}>Notifications</Text>
-                    <TouchableOpacity onPress={() => setShowModal(false)}>
-                        <Text style={styles.close}>Close</Text>
-                    </TouchableOpacity>
-                </View>
-                <FlatList 
-                    data={notifications}
-                    keyExtractor={item => item.id}
-                    renderItem={({item}) => (
-                        <TouchableOpacity style={[styles.item, !item.read && styles.unread]} onPress={() => handleNotificationPress(item)}>
-                            <View style={{flex:1}}>
-                                <Text style={styles.itemTitle}>{item.title}</Text>
-                                <Text style={styles.itemBody}>{item.body}</Text>
-                                <Text style={styles.itemTime}>{new Date(item.createdAt).toLocaleString()}</Text>
-                            </View>
-                            {!item.read && <View style={styles.dot} />}
-                        </TouchableOpacity>
-                    )}
-                    ListEmptyComponent={<Text style={styles.emptyText}>No notifications</Text>}
-                />
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Notifications</Text>
+              <TouchableOpacity onPress={() => setShowModal(false)}>
+                <Text style={styles.close}>Close</Text>
+              </TouchableOpacity>
             </View>
+            <FlatList
+              data={notifications}
+              keyExtractor={item => item.id}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={[styles.item, !item.read && styles.unread]}
+                  onPress={() => handleNotificationPress(item)}
+                >
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.itemTitle}>{item.title}</Text>
+                    <Text style={styles.itemBody}>{item.body}</Text>
+                    <Text style={styles.itemTime}>{new Date(item.createdAt).toLocaleString()}</Text>
+                  </View>
+                  {!item.read && <View style={styles.dot} />}
+                </TouchableOpacity>
+              )}
+              ListEmptyComponent={<Text style={styles.emptyText}>No notifications</Text>}
+            />
+          </View>
         </View>
       </Modal>
     </>
   );
 }
 
-const getStyles = (theme, isDarkMode) => StyleSheet.create({
-  container: {
-    padding: 10,
-    marginRight: 10,
-  },
-  bell: {
-    fontSize: 24,
-  },
-  badge: {
-    position: 'absolute',
-    top: 5,
-    right: 5,
-    backgroundColor: theme.colors.error,
-    borderRadius: 10,
-    width: 20,
-    height: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  badgeText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'flex-end',
-  },
-  modalContent: {
+const getStyles = (theme, isDarkMode) =>
+  StyleSheet.create({
+    container: {
+      padding: 10,
+      marginRight: 10,
+    },
+    bell: {
+      fontSize: 24,
+    },
+    badge: {
+      position: 'absolute',
+      top: 5,
+      right: 5,
+      backgroundColor: theme.colors.error,
+      borderRadius: 10,
+      width: 20,
+      height: 20,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    badgeText: {
+      color: '#fff',
+      fontSize: 12,
+      fontWeight: 'bold',
+    },
+    modalOverlay: {
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,0.5)',
+      justifyContent: 'flex-end',
+    },
+    modalContent: {
       backgroundColor: theme.colors.surface,
       height: '60%',
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,
       padding: 20,
-      shadowColor: "#000",
+      shadowColor: '#000',
       shadowOffset: { width: 0, height: -2 },
       shadowOpacity: 0.25,
       shadowRadius: 3.84,
       elevation: 5,
-  },
-  modalHeader: {
+    },
+    modalHeader: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginBottom: 15,
       alignItems: 'center',
-  },
-  modalTitle: {
+    },
+    modalTitle: {
       fontSize: 20,
       fontWeight: 'bold',
       color: theme.colors.text,
-  },
-  close: {
+    },
+    close: {
       color: theme.colors.primary,
       fontSize: 16,
       fontWeight: 'bold',
-  },
-  item: {
+    },
+    item: {
       padding: 15,
       borderBottomWidth: 1,
       borderBottomColor: theme.colors.border,
       flexDirection: 'row',
       alignItems: 'center',
-  },
-  unread: {
+    },
+    unread: {
       backgroundColor: isDarkMode ? '#2c2c2c' : '#f0f8ff',
-  },
-  itemTitle: {
+    },
+    itemTitle: {
       fontWeight: 'bold',
       marginBottom: 2,
       color: theme.colors.text,
-  },
-  itemBody: {
+    },
+    itemBody: {
       color: theme.colors.textSecondary,
       fontSize: 14,
-  },
-  itemTime: {
+    },
+    itemTime: {
       color: theme.colors.textSecondary,
       fontSize: 10,
       marginTop: 4,
-  },
-  dot: {
+    },
+    dot: {
       width: 10,
       height: 10,
       borderRadius: 5,
       backgroundColor: theme.colors.primary,
       marginLeft: 10,
-  },
-  emptyText: {
+    },
+    emptyText: {
       textAlign: 'center',
       marginTop: 20,
       color: theme.colors.textSecondary,
-  }
-});
+    },
+  });

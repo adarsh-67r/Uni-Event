@@ -10,89 +10,81 @@ import { db } from './firebaseConfig';
  * Export attendance data as CSV (Web version - direct download)
  */
 export const exportAttendanceCSV = async (eventId, eventTitle) => {
-    try {
-        // Fetch all check-ins
-        const q = query(
-            collection(db, 'events', eventId, 'checkIns'),
-            orderBy('checkedInAt', 'asc')
-        );
+  try {
+    // Fetch all check-ins
+    const q = query(collection(db, 'events', eventId, 'checkIns'), orderBy('checkedInAt', 'asc'));
 
-        const snapshot = await getDocs(q);
+    const snapshot = await getDocs(q);
 
-        if (snapshot.empty) {
-            throw new Error('No attendance data to export');
-        }
-
-        // Build CSV content
-        let csvContent = 'Name,Email,Year,Branch,Ticket ID,Check-In Time\n';
-
-        snapshot.forEach(doc => {
-            const data = doc.data();
-            const checkInTime = data.checkedInAt?.toDate
-                ? data.checkedInAt.toDate().toLocaleString()
-                : 'N/A';
-
-            csvContent += `"${data.userName || 'N/A'}","${data.userEmail || 'N/A'}",${data.userYear || 'N/A'},"${data.userBranch || 'N/A'}","${data.ticketId || 'N/A'}","${checkInTime}"\n`;
-        });
-
-        // Create and download file (Web)
-        const fileName = `attendance_${eventTitle.replace(/[^a-z0-9]/gi, '_')}_${Date.now()}.csv`;
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-
-        link.setAttribute('href', url);
-        link.setAttribute('download', fileName);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        return {
-            success: true,
-            message: 'CSV exported successfully'
-        };
-
-    } catch (error) {
-        console.error('CSV export error:', error);
-        return {
-            success: false,
-            error: error.message || 'Failed to export CSV'
-        };
+    if (snapshot.empty) {
+      throw new Error('No attendance data to export');
     }
+
+    // Build CSV content
+    let csvContent = 'Name,Email,Year,Branch,Ticket ID,Check-In Time\n';
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const checkInTime = data.checkedInAt?.toDate
+        ? data.checkedInAt.toDate().toLocaleString()
+        : 'N/A';
+
+      csvContent += `"${data.userName || 'N/A'}","${data.userEmail || 'N/A'}",${data.userYear || 'N/A'},"${data.userBranch || 'N/A'}","${data.ticketId || 'N/A'}","${checkInTime}"\n`;
+    });
+
+    // Create and download file (Web)
+    const fileName = `attendance_${eventTitle.replace(/[^a-z0-9]/gi, '_')}_${Date.now()}.csv`;
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+
+    link.setAttribute('href', url);
+    link.setAttribute('download', fileName);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    return {
+      success: true,
+      message: 'CSV exported successfully',
+    };
+  } catch (error) {
+    console.error('CSV export error:', error);
+    return {
+      success: false,
+      error: error.message || 'Failed to export CSV',
+    };
+  }
 };
 
 /**
  * Export attendance data as PDF (Web version - HTML download)
  */
 export const exportAttendancePDF = async (eventId, eventTitle, eventData) => {
-    try {
-        // Fetch all check-ins
-        const q = query(
-            collection(db, 'events', eventId, 'checkIns'),
-            orderBy('checkedInAt', 'asc')
-        );
+  try {
+    // Fetch all check-ins
+    const q = query(collection(db, 'events', eventId, 'checkIns'), orderBy('checkedInAt', 'asc'));
 
-        const snapshot = await getDocs(q);
+    const snapshot = await getDocs(q);
 
-        if (snapshot.empty) {
-            throw new Error('No attendance data to export');
-        }
+    if (snapshot.empty) {
+      throw new Error('No attendance data to export');
+    }
 
-        const checkIns = [];
-        snapshot.forEach(doc => {
-            checkIns.push({ id: doc.id, ...doc.data() });
-        });
+    const checkIns = [];
+    snapshot.forEach(doc => {
+      checkIns.push({ id: doc.id, ...doc.data() });
+    });
 
-        // Calculate stats
-        const totalRegistrations = eventData?.stats?.totalRegistrations || 0;
-        const totalCheckedIn = checkIns.length;
-        const checkInRate = totalRegistrations > 0
-            ? ((totalCheckedIn / totalRegistrations) * 100).toFixed(1)
-            : 0;
+    // Calculate stats
+    const totalRegistrations = eventData?.stats?.totalRegistrations || 0;
+    const totalCheckedIn = checkIns.length;
+    const checkInRate =
+      totalRegistrations > 0 ? ((totalCheckedIn / totalRegistrations) * 100).toFixed(1) : 0;
 
-        // Build HTML content
-        const htmlContent = `
+    // Build HTML content
+    const htmlContent = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -183,10 +175,10 @@ export const exportAttendancePDF = async (eventId, eventTitle, eventData) => {
         <h1>Attendance Report</h1>
         <div class="subtitle">${eventTitle}</div>
         <div class="subtitle">${new Date().toLocaleDateString('en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
         })}</div>
     </div>
 
@@ -217,7 +209,9 @@ export const exportAttendancePDF = async (eventId, eventTitle, eventData) => {
             </tr>
         </thead>
         <tbody>
-            ${checkIns.map((item, index) => `
+            ${checkIns
+              .map(
+                (item, index) => `
                 <tr>
                     <td>${index + 1}</td>
                     <td>${item.userName || 'N/A'}</td>
@@ -226,7 +220,9 @@ export const exportAttendancePDF = async (eventId, eventTitle, eventData) => {
                     <td>${item.userBranch || 'N/A'}</td>
                     <td>${item.checkedInAt?.toDate ? item.checkedInAt.toDate().toLocaleString() : 'N/A'}</td>
                 </tr>
-            `).join('')}
+            `,
+              )
+              .join('')}
         </tbody>
     </table>
 
@@ -246,21 +242,20 @@ export const exportAttendancePDF = async (eventId, eventTitle, eventData) => {
 </html>
         `;
 
-        // Open in new window for printing/saving as PDF
-        const printWindow = window.open('', '_blank');
-        printWindow.document.write(htmlContent);
-        printWindow.document.close();
+    // Open in new window for printing/saving as PDF
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(htmlContent);
+    printWindow.document.close();
 
-        return {
-            success: true,
-            message: 'PDF report opened for printing'
-        };
-
-    } catch (error) {
-        console.error('PDF export error:', error);
-        return {
-            success: false,
-            error: error.message || 'Failed to export PDF'
-        };
-    }
+    return {
+      success: true,
+      message: 'PDF report opened for printing',
+    };
+  } catch (error) {
+    console.error('PDF export error:', error);
+    return {
+      success: false,
+      error: error.message || 'Failed to export PDF',
+    };
+  }
 };

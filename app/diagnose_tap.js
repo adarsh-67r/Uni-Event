@@ -6,12 +6,12 @@ try {
   const content = fs.readFileSync(p, 'utf8');
   const idx = content.indexOf('async function tapNodeShims');
   if (idx > -1) {
-      console.log('--- FUNCTION START ---');
-      console.log(content.substring(idx, idx + 600));
-      console.log('--- FUNCTION END ---');
+    console.log('--- FUNCTION START ---');
+    console.log(content.substring(idx, idx + 600));
+    console.log('--- FUNCTION END ---');
   } else {
-      console.log('Function tapNodeShims not found. Dumping first 500 chars:');
-      console.log(content.substring(0, 500));
+    console.log('Function tapNodeShims not found. Dumping first 500 chars:');
+    console.log(content.substring(0, 500));
   }
 } catch (e) {
   console.error(e);

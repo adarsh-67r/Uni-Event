@@ -18,10 +18,10 @@ export const ThemeProvider = ({ children }) => {
   useEffect(() => {
     setTheme(isDarkMode ? darkTheme : lightTheme);
     if (Platform.OS === 'web') {
-        const meta = document.querySelector('meta[name="theme-color"]');
-        if (meta) {
-            meta.setAttribute('content', isDarkMode ? '#000000' : '#ffffff');
-        }
+      const meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) {
+        meta.setAttribute('content', isDarkMode ? '#000000' : '#ffffff');
+      }
     }
   }, [isDarkMode]);
 

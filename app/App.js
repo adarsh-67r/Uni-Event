@@ -54,7 +54,14 @@ function HomeScreen({ navigation }) {
 
   const welcomeContent = (
     <View style={{ marginBottom: theme.spacing.m }}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: theme.spacing.m }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          marginTop: theme.spacing.m,
+        }}
+      >
         <View style={styles.userInfo}>
           <Text style={[theme.typography.h2, { color: theme.colors.text }]}>Welcome,</Text>
           <Text style={[theme.typography.h3, { color: theme.colors.text }]} numberOfLines={1}>
@@ -67,10 +74,18 @@ function HomeScreen({ navigation }) {
         <NotificationBell />
       </View>
 
-      <View style={[styles.actionContainer, { marginBottom: theme.spacing.m, marginTop: theme.spacing.s }]}>
+      <View
+        style={[
+          styles.actionContainer,
+          { marginBottom: theme.spacing.m, marginTop: theme.spacing.s },
+        ]}
+      >
         {(role === 'admin' || role === 'club') && (
           <TouchableOpacity
-            style={[styles.primaryButton, { backgroundColor: theme.colors.primary, ...theme.shadows.default }]}
+            style={[
+              styles.primaryButton,
+              { backgroundColor: theme.colors.primary, ...theme.shadows.default },
+            ]}
             onPress={() => navigation.navigate('CreateEvent')}
           >
             <Text style={theme.typography.button}>+ Create Event</Text>
@@ -83,7 +98,7 @@ function HomeScreen({ navigation }) {
   return (
     <ScreenWrapper>
       <UserFeed navigation={navigation} headerContent={welcomeContent} />
-      <StatusBar style={isDarkMode ? "light" : "dark"} />
+      <StatusBar style={isDarkMode ? 'light' : 'dark'} />
     </ScreenWrapper>
   );
 }
@@ -99,7 +114,7 @@ function TabNavigator() {
 
   return (
     <Tab.Navigator
-      tabBar={(props) => <CustomTabBar {...props} />}
+      tabBar={props => <CustomTabBar {...props} />}
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
@@ -107,38 +122,22 @@ function TabNavigator() {
           backgroundColor: 'transparent',
           elevation: 0,
           borderTopWidth: 0,
-        }
+        },
       }}
     >
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ title: 'Home' }}
-      />
+      <Tab.Screen name="Home" component={HomeScreen} options={{ title: 'Home' }} />
 
       {/* Admin Tab: Control Panel (Admin Only) */}
       {role === 'admin' && (
-        <Tab.Screen
-          name="Admin"
-          component={AdminDashboard}
-          options={{ title: 'Control' }}
-        />
+        <Tab.Screen name="Admin" component={AdminDashboard} options={{ title: 'Control' }} />
       )}
 
       {/* My Events Tab: For Admin & Club */}
       {(role === 'admin' || role === 'club') && (
-        <Tab.Screen
-          name="MyEvents"
-          component={MyEventsScreen}
-          options={{ title: 'My Events' }}
-        />
+        <Tab.Screen name="MyEvents" component={MyEventsScreen} options={{ title: 'My Events' }} />
       )}
 
-      <Tab.Screen
-        name="Reminders"
-        component={RemindersScreen}
-        options={{ title: 'Reminders' }}
-      />
+      <Tab.Screen name="Reminders" component={RemindersScreen} options={{ title: 'Reminders' }} />
 
       {/* Leaderboard for everyone or students */}
       <Tab.Screen
@@ -147,23 +146,13 @@ function TabNavigator() {
         options={{ title: 'Rankings' }}
       />
 
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{ title: 'Profile' }}
-      />
+      <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
     </Tab.Navigator>
   );
 }
 
-
-
 const linking = {
-  prefixes: [
-    'https://unievent-ez2w.onrender.com',
-    'unievent://',
-    'http://localhost:19006'
-  ],
+  prefixes: ['https://unievent-ez2w.onrender.com', 'unievent://', 'http://localhost:19006'],
   config: {
     screens: {
       Main: {
@@ -182,7 +171,14 @@ function Navigation() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.colors.background }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: theme.colors.background,
+        }}
+      >
         <ActivityIndicator size="large" color={theme.colors.primary} />
         <Text style={{ marginTop: 20, color: theme.colors.textSecondary, fontSize: 16 }}>
           Please wait...
@@ -205,31 +201,91 @@ function Navigation() {
           },
           contentStyle: {
             backgroundColor: theme.colors.background,
-          }
+          },
         }}
       >
         {user ? (
           <>
             <Stack.Screen name="Main" component={TabNavigator} options={{ headerShown: false }} />
-            <Stack.Screen name="CreateEvent" component={CreateEvent} options={{ title: 'Create New Event' }} />
-            <Stack.Screen name="EventDetail" component={EventDetail} options={{ title: 'Event Details' }} />
-            <Stack.Screen name="ParticipatingEvents" component={ParticipatingEventsScreen} options={{ title: 'Events I\'m Going To' }} />
+            <Stack.Screen
+              name="CreateEvent"
+              component={CreateEvent}
+              options={{ title: 'Create New Event' }}
+            />
+            <Stack.Screen
+              name="EventDetail"
+              component={EventDetail}
+              options={{ title: 'Event Details' }}
+            />
+            <Stack.Screen
+              name="ParticipatingEvents"
+              component={ParticipatingEventsScreen}
+              options={{ title: "Events I'm Going To" }}
+            />
             {/* MyEvents is now a Tab, but can still be navigated to if needed, though usually via tab */}
-            <Stack.Screen name="EventAnalytics" component={EventAnalytics} options={{ title: 'Analytics' }} />
-            <Stack.Screen name="AttendanceDashboard" component={AttendanceDashboard} options={{ title: 'Attendance', headerShown: false }} />
-            <Stack.Screen name="QRScanner" component={QRScannerScreen} options={{ title: 'Scan QR', headerShown: false }} />
+            <Stack.Screen
+              name="EventAnalytics"
+              component={EventAnalytics}
+              options={{ title: 'Analytics' }}
+            />
+            <Stack.Screen
+              name="AttendanceDashboard"
+              component={AttendanceDashboard}
+              options={{ title: 'Attendance', headerShown: false }}
+            />
+            <Stack.Screen
+              name="QRScanner"
+              component={QRScannerScreen}
+              options={{ title: 'Scan QR', headerShown: false }}
+            />
 
             {/* Migrated Screens */}
-            <Stack.Screen name="Appearance" component={AppearanceScreen} options={{ title: 'Appearance' }} />
-            <Stack.Screen name="ClubProfile" component={ClubProfileScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="EventChat" component={EventChatScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="Payment" component={PaymentScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="TicketScreen" component={TicketScreen} options={{ headerShown: false }} />
+            <Stack.Screen
+              name="Appearance"
+              component={AppearanceScreen}
+              options={{ title: 'Appearance' }}
+            />
+            <Stack.Screen
+              name="ClubProfile"
+              component={ClubProfileScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="EventChat"
+              component={EventChatScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Payment"
+              component={PaymentScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="TicketScreen"
+              component={TicketScreen}
+              options={{ headerShown: false }}
+            />
             <Stack.Screen name="Wallet" component={WalletScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="MyRegisteredEvents" component={MyRegisteredEventsScreen} options={{ title: 'My Calendar' }} />
-            <Stack.Screen name="SavedEvents" component={SavedEventsScreen} options={{ title: 'Saved Events' }} />
-            <Stack.Screen name="FormBuilder" component={FormBuilderScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="EventRegistrationForm" component={EventRegistrationFormScreen} options={{ headerShown: false }} />
+            <Stack.Screen
+              name="MyRegisteredEvents"
+              component={MyRegisteredEventsScreen}
+              options={{ title: 'My Calendar' }}
+            />
+            <Stack.Screen
+              name="SavedEvents"
+              component={SavedEventsScreen}
+              options={{ title: 'Saved Events' }}
+            />
+            <Stack.Screen
+              name="FormBuilder"
+              component={FormBuilderScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="EventRegistrationForm"
+              component={EventRegistrationFormScreen}
+              options={{ headerShown: false }}
+            />
           </>
         ) : (
           <Stack.Screen name="Auth" component={AuthScreen} options={{ headerShown: false }} />
@@ -270,8 +326,8 @@ function AppContent() {
       if (user && token) {
         // Save token to user profile
         updateDoc(doc(db, 'users', user.uid), {
-          pushToken: token
-        }).catch(err => console.log("Failed to save push token", err));
+          pushToken: token,
+        }).catch(err => console.log('Failed to save push token', err));
 
         // Global Automation Check - DISABLED (Manual feedback sending only)
         // checkAndTriggerAutomations(user.uid);
@@ -280,18 +336,20 @@ function AppContent() {
 
     // Listeners for foreground notifications
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      console.log("Notification Received:", notification);
+      console.log('Notification Received:', notification);
     });
 
     // Listeners for user interacting with notification
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log("Notification Tapped:", response);
+      console.log('Notification Tapped:', response);
       // Could navigate to event detail here
     });
 
     return () => {
-      if (notificationListener.current) Notifications.removeNotificationSubscription(notificationListener.current);
-      if (responseListener.current) Notifications.removeNotificationSubscription(responseListener.current);
+      if (notificationListener.current)
+        Notifications.removeNotificationSubscription(notificationListener.current);
+      if (responseListener.current)
+        Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, [user]);
 
