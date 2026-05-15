@@ -1,4 +1,3 @@
-
 <img src="./app/assets/banner.png" alt="UniEvent Banner" width="1000" />
 <div align="center">
 
@@ -39,6 +38,12 @@
   </a>
   <a href="https://github.com/roshankumar0036singh/Uni-Event/pulls">
     <img src="https://img.shields.io/github/issues-pr/roshankumar0036singh/Uni-Event?style=for-the-badge&logo=github" alt="Pull Requests" />
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/roshankumar0036singh/Uni-Event/actions/workflows/ci.yml">
+    <img src="https://github.com/roshankumar0036singh/Uni-Event/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI" />
   </a>
 </p>
 
