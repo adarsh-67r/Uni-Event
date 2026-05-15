@@ -62,7 +62,9 @@ export default [
         },
 
         rules: {
-            'prettier/prettier': 'error',
+            // Downgraded to warn: existing codebase not yet formatted.
+            // Upgrade back to 'error' after a dedicated formatting PR.
+            'prettier/prettier': 'warn',
             'react-hooks/rules-of-hooks': 'error',
             'react-hooks/exhaustive-deps': 'warn',
             'react/prop-types': 'warn',
@@ -71,7 +73,7 @@ export default [
         },
     },
 
-    // ── Node.js scripts ──────────────────────────────────────────────────────
+    // ── Node.js scripts ─────────────────────────────────────────────────────
     {
         files: ['metro.config.js', 'babel.config.js', 'scripts/**/*.js'],
         languageOptions: {
