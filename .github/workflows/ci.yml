@@ -1,13 +1,24 @@
 name: CI
 
 on:
+<<<<<<< HEAD
+=======
+  push:
+    branches: [main]
+>>>>>>> ci-test-v2
   pull_request:
     branches: [main]
 
 jobs:
+<<<<<<< HEAD
   # ── App: Lint + Test ──────────────────────────────────────────────────────
   lint-and-test:
     name: Lint & Test (app)
+=======
+  # ── App: Format + Lint + Test ───────────────────────────────────────────────
+  lint-and-test:
+    name: Format, Lint & Test (app)
+>>>>>>> ci-test-v2
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -16,16 +27,38 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+<<<<<<< HEAD
+=======
+        with:
+          # Need full git access to commit formatted files back
+          token: ${{ secrets.GITHUB_TOKEN }}
+>>>>>>> ci-test-v2
 
       - name: Set up Node.js 18
         uses: actions/setup-node@v4
         with:
           node-version: 18
+<<<<<<< HEAD
           cache: npm
           cache-dependency-path: app/package-lock.json
 
       - name: Install dependencies
         run: npm ci
+=======
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Auto-format with Prettier
+        run: npx prettier --write .
+
+      - name: Commit formatted files (push only)
+        if: github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --quiet || (git add -A && git commit -m "style: auto-format with prettier [skip ci]" && git push)
+>>>>>>> ci-test-v2
 
       - name: Run ESLint
         run: npm run lint
@@ -49,11 +82,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
+<<<<<<< HEAD
           cache: npm
           cache-dependency-path: cloud-functions/package-lock.json
 
       - name: Install dependencies
         run: npm ci
+=======
+
+      - name: Install dependencies
+        run: npm install
+>>>>>>> ci-test-v2
 
       - name: Build TypeScript
         run: npm run build

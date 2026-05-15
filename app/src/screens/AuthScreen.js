@@ -29,6 +29,9 @@ WebBrowser.maybeCompleteAuthSession();
 
 const { width } = Dimensions.get('window');
 
+const MIN_PASSWORD_LENGTH = 6;
+const ERR_PASSWORD_SHORT = 'Password must be at least 6 characters';
+
 export default function AuthScreen() {
   const { theme } = useTheme();
   const [isLogin, setIsLogin] = useState(true);
@@ -36,6 +39,7 @@ export default function AuthScreen() {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
 
   const { signIn, signUp, saveGoogleAccountCredentials } = useAuth();
 
@@ -48,6 +52,10 @@ export default function AuthScreen() {
         ? window.location.origin || process.env.EXPO_PUBLIC_REDIRECT_URI
         : process.env.EXPO_PUBLIC_REDIRECT_URI || makeRedirectUri({ useProxy: true }),
   });
+
+  useEffect(() => {
+    setPasswordError('');
+  }, [isLogin]);
 
   useEffect(() => {
     if (response?.type === 'error') {
@@ -130,6 +138,12 @@ export default function AuthScreen() {
       return;
     }
 
+    if (!isLogin && password.length < MIN_PASSWORD_LENGTH) {
+      setPasswordError(ERR_PASSWORD_SHORT);
+      return;
+    }
+
+    setPasswordError('');
     setLoading(true);
     try {
       if (isLogin) {
@@ -138,7 +152,11 @@ export default function AuthScreen() {
         await signUp(email, password, { displayName: name });
       }
     } catch (error) {
-      Alert.alert('Error', error.message);
+      if (error.code === 'auth/weak-password') {
+        setPasswordError(ERR_PASSWORD_SHORT);
+      } else {
+        Alert.alert('Error', error.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -246,10 +264,16 @@ export default function AuthScreen() {
                 placeholder="Password"
                 placeholderTextColor={theme.colors.textSecondary}
                 value={password}
-                onChangeText={setPassword}
+                onChangeText={(text) => {
+                  setPassword(text);
+                  if (passwordError) setPasswordError('');
+                }}
                 secureTextEntry
               />
             </View>
+            {!isLogin && passwordError ? (
+              <Text style={styles.errorText}>{passwordError}</Text>
+            ) : null}
 
             <TouchableOpacity
               style={[styles.authButton, { backgroundColor: theme.colors.primary }]}
@@ -352,7 +376,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     paddingVertical: 0,
-    outlineStyle: 'none', // Remove web outline
+    outlineStyle: 'none',
     backgroundColor: 'transparent',
   },
   authButton: {
@@ -408,5 +432,11 @@ const styles = StyleSheet.create({
   footerLink: {
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginTop: -8,
+    marginLeft: 4,
   },
 });

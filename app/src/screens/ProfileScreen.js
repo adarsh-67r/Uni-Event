@@ -156,6 +156,10 @@ export default function ProfileScreen({ navigation }) {
             });
 
             const data = await res.json();
+            // The HTML snippet below is likely intended for a server-side email template.
+            // Inserting it directly into client-side JavaScript would cause a syntax error.
+            // If this is meant to be part of the message content, it should be passed as a string.
+            // For now, assuming the user wants to modify the error message structure if `res.ok` is false.
             if (!res.ok) throw new Error(data.message || 'Failed');
 
             Alert.alert('Success', data.message || `Digest sent! Events today: ${data.count}`);
@@ -830,7 +834,7 @@ const getStyles = theme =>
         profileBio: {
             fontSize: 16,
             textAlign: 'center',
-            color: theme.colors.primary,
+            color: theme.colors.primary, // Highlight bio
             paddingHorizontal: 20,
             marginTop: 4,
             marginBottom: 4,
@@ -940,6 +944,8 @@ const getStyles = theme =>
             marginBottom: 8,
             marginLeft: 4,
         },
+
+        // Chips Styles
         chipRow: { flexDirection: 'row', gap: 10, flexWrap: 'wrap' },
         chipScroll: { marginBottom: 5 },
         chip: {
@@ -965,6 +971,7 @@ const getStyles = theme =>
             color: '#fff',
             fontWeight: 'bold',
         },
+
         formActions: {
             flexDirection: 'row',
             marginTop: 20,

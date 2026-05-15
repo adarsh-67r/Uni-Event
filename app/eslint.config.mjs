@@ -59,7 +59,11 @@ export default [
 
     languageOptions: {
       globals: {
+<<<<<<< HEAD
         ...globals.browser,  // setTimeout, document, Blob, URL, Notification, etc.
+=======
+        ...globals.browser, // setTimeout, document, Blob, URL, Notification, etc.
+>>>>>>> ci-test-v2
         ...globals.jest,
       },
     },
