@@ -7,9 +7,9 @@ on:
     branches: [main]
 
 jobs:
-  # ── App: Format + Lint + Test ───────────────────────────────────────────────
+  # ── App: Format + Lint + Test ───────────────────────────────────────────
   lint-and-test:
-    name: Format, Lint & Test (app)
+    name: Lint & Test (app)
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -19,34 +19,43 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          # Need full git access to commit formatted files back
           token: ${{ secrets.GITHUB_TOKEN }}
+          # fetch full history so we can push back
+          fetch-depth: 0
 
       - name: Set up Node.js 18
         uses: actions/setup-node@v4
         with:
           node-version: 18
+          cache: npm
+          cache-dependency-path: app/package-lock.json
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
+      # ── 1. Prettier formats code first ────────────────────────────────────
       - name: Auto-format with Prettier
         run: npx prettier --write .
 
-      - name: Commit formatted files (push only)
-        if: github.event_name == 'push'
+      - name: Commit formatted files back
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git diff --quiet || (git add -A && git commit -m "style: auto-format with prettier [skip ci]" && git push)
+          git diff --quiet && echo "No formatting changes." || (
+            git add -A
+            git commit -m "style: auto-format with prettier [skip ci]"
+            git push
+          )
 
+      # ── 2. ESLint checks after formatting ────────────────────────────────
       - name: Run ESLint
         run: npm run lint
 
+      # ── 3. Tests ──────────────────────────────────────────────────────
       - name: Run Jest tests
         run: npm test -- --ci --passWithNoTests
 
-  # ── Cloud Functions: Build ────────────────────────────────────────────────
+  # ── Cloud Functions: Build ───────────────────────────────────────────────
   build-functions:
     name: Build (cloud-functions)
     runs-on: ubuntu-latest
@@ -62,9 +71,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
+          cache: npm
+          cache-dependency-path: cloud-functions/package-lock.json
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build TypeScript
         run: npm run build
