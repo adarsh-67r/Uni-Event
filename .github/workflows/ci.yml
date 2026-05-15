@@ -1,10 +1,46 @@
 name: CI
 
 on:
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
 
 jobs:
+  # ── Auto-format: run prettier --write and commit back ──────────────────
+  format:
+    name: Auto-format (Prettier)
+    runs-on: ubuntu-latest
+    # Only auto-commit on push to main, not on PRs
+    if: github.event_name == 'push'
+    defaults:
+      run:
+        working-directory: ./app
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Prettier
+        run: npx prettier --write .
+
+      - name: Commit formatted files (if any changed)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --quiet || (git add -A && git commit -m "style: auto-format with prettier [skip ci]")
+          git push
+
   # ── App: Lint + Test ──────────────────────────────────────────────────────
   lint-and-test:
     name: Lint & Test (app)
@@ -25,8 +61,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run Prettier check (report only — existing files not yet formatted)
-        run: npx prettier --check . || true
+      - name: Run Prettier check
+        run: npx prettier --check .
 
       - name: Run ESLint
         run: npm run lint
